@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<addon id="script.game.yahtzee" name="Yahtzee Game" version="0.1.0" provider-name="Mark Koenig">
+    <requires>
+        <import addon="xbmc.python" version="2.10.0"/>
+    </requires>
+    <extension point="xbmc.python.script" library="game.py"/>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary lang="en">The Game Netwalk</summary>
+        <description lang="en">Netwalk is a puzzle-like game where you have to rotate tiles.[CR]Your goal is to connect all terminals to the server.[CR][CR]See in-game help for more informations.</description>
+    </extension>
+</addon>
