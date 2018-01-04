@@ -139,14 +139,21 @@ class Game(xbmcgui.WindowXML):
 
         self.log('OnClick ' + str(control_id))
         
-        if(control_id == 5300):
-            #calc = YahtzeePoint()
-            #dice = [2,3,5,4,1]
-            #dialog = xbmcgui.Dialog()
-            #confirmed = dialog.yesno('Value', str(calc.GetCalc(14, dice)))
+        if(control_id >= 5299) and (control_id < 5320):
+            btn = control_id - 5300 + 1
             
-            #y = YahtzeeLogic()
-            #y.ReadRestgewinn()
+            calc = YahtzeePoint()
+            value = calc.GetCalc(btn, self.dice)
+
+            if(value == 0):
+                dialog = xbmcgui.Dialog()
+                
+                
+                confirmed = dialog.yesno(addon.getLocalizedString(3044),
+                                         addon.getLocalizedString(3012 + btn))
+            else:
+                self.pointsP1[btn-1] = value
+                self.updatePoints()
             pass
 
         # set player
@@ -183,14 +190,19 @@ class Game(xbmcgui.WindowXML):
                 actualTry = 1
                 self.round = 1
                 self.diceOn = True
+                
                 for i in range(5):
                     self.hold[i] = False
                 self.updateToggleButtons(control_id)
                 self.diceOn = True
                 xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
+            else:
+                xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
+                self.diceOn = True
+                self.diceFinished = False
 
 
-        if(self.actualTry > 1) and self.gameOn:
+        if(self.actualTry > 0) and self.gameOn and not self.diceOn and self.diceFinished:
             if(control_id == 5200):
                 self.hold[0] = not self.hold[0]
                 self.updateToggleButtons(control_id)
@@ -218,21 +230,26 @@ class Game(xbmcgui.WindowXML):
                 self.diceCnt = self.diceCnt +1
                 if(self.diceCnt < 10):
                     for i in range(5):
-                        x =randint(1, 6)
-                        self.p0x = self.getControl(5100+ i)
-                        self.p0x.setImage('w%s.png' % x)
+                        if (self.hold[i] == False):
+                            x =randint(1, 6)
+                            self.p0x = self.getControl(5100+ i)
+                            self.p0x.setImage('w%s.png' % x)
+                            self.dice[i] = x
                 else:
                     self.diceOn = False
-                    self.diceFinished = True
+                    self.diceFinished = True   
+            else:
+                self.diceCnt = 0
             xbmc.sleep(200)
 
     def updateToggleButtons(self, control_id):
 
         # update player settings
         self.p0x = self.getControl(5003)
-        self.p0x.setLabel('Player: ' + str(self.player))
+        self.p0x.setLabel(addon.getLocalizedString(3002) + str(self.player))
+        
         self.p0x = self.getControl(5004)
-        self.p0x.setLabel('Computer: ' + str(self.computer))
+        self.p0x.setLabel(addon.getLocalizedString(3003) + str(self.computer))
 
         # update actual player
         self.p0x = self.getControl(5006)
@@ -274,6 +291,17 @@ class Game(xbmcgui.WindowXML):
                 self.p0x.setImage('t_button_active.png')
             else:
                 self.p0x.setImage('t_button_active_sel.png')
+
+    def updatePoints(self):
+        for i in range(15):
+	    self.p0x = self.getControl(5400+ i)
+	    self.p0x.setLabel(str(self.pointsP1[i]))
+	    self.p0x = self.getControl(5500+ i)
+	    self.p0x.setLabel(str(self.pointsP2[i]))
+	    self.p0x = self.getControl(5600+ i)
+	    self.p0x.setLabel(str(self.pointsP3[i]))
+	    self.p0x = self.getControl(5700+ i)
+            self.p0x.setLabel(str(self.pointsP4[i]))
 
     def log(self, msg):
         xbmc.log('[ADDON][%s] %s' % ('TEST', msg.encode('utf-8')),
