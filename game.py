@@ -56,10 +56,10 @@ class Game(xbmcgui.WindowXML):
     pointsP2 = []
     pointsP3 = []
     pointsP4 = []
-    
+
     hold = []
     dice = []
-    
+
     soundOn = True
 
     round = 0
@@ -69,48 +69,29 @@ class Game(xbmcgui.WindowXML):
     player = 2
     computer = 0
     gameOn = False
-    
+
     diceOn = False
     diceCnt = 0
     diceFinished = 0
 
-    CONTROL_ID_GRID = 3001
-    CONTROL_ID_RESTART = 3002
-    CONTROL_ID_MOVES_COUNT = 3003
-    CONTROL_ID_TARGET_COUNT = 3004
-    CONTROL_ID_TIME = 3005
-    CONTROL_ID_EXIT = 3006
-    CONTROL_ID_GAME_ID = 3007
+# ----------------------------------------------------------------------------------------------------
 
     def onInit(self):
         # init vars
-                
+
         # init points
         for i in range(15):
-            self.pointsP1.append(0)
-            self.pointsP2.append(0)
-            self.pointsP3.append(0)
-            self.pointsP4.append(0)
-            
+            self.pointsP1.append(-1)
+            self.pointsP2.append(-1)
+            self.pointsP3.append(-1)
+            self.pointsP4.append(-1)
+
         for i in range(5):
             self.hold.append(False)
             self.dice.append(6)
-        
+
         # set points
-        for i in range(15):
-            self.p0x = self.getControl(5400+ i)
-            self.p0x.setLabel(str(self.pointsP1[i]))
-            self.p0x = self.getControl(5500+ i)
-            self.p0x.setLabel(str(self.pointsP2[i]))
-            self.p0x = self.getControl(5600+ i)
-            self.p0x.setLabel(str(self.pointsP3[i]))
-            self.p0x = self.getControl(5700+ i)
-            self.p0x.setLabel(str(self.pointsP4[i]))
-            
-        # draw dices
-        for i in range(5):
-            self.p0x = self.getControl(5100+ i)
-            self.p0x.setImage('w%s.png' % (i+1))
+        self.updatePoints()
 
         # get controls
 
@@ -119,7 +100,7 @@ class Game(xbmcgui.WindowXML):
         # start the timer thread
         thread.start_new_thread(self.timer_thread, ())
         # start the game
-        
+
         y = YahtzeeLogic()
         #y.ReadRestgewinn()
 
@@ -138,23 +119,47 @@ class Game(xbmcgui.WindowXML):
     def onClick(self, control_id):
 
         self.log('OnClick ' + str(control_id))
-        
+
+        # set points
         if(control_id >= 5299) and (control_id < 5320):
             btn = control_id - 5300 + 1
-            
-            calc = YahtzeePoint()
-            value = calc.GetCalc(btn, self.dice)
 
-            if(value == 0):
-                dialog = xbmcgui.Dialog()
-                
-                
-                confirmed = dialog.yesno(addon.getLocalizedString(3044),
-                                         addon.getLocalizedString(3012 + btn))
+            if(self.gameOn and not self.diceOn):
+                points = self.GetValuePlayer(self.actualPlayer)
+                if(points[btn-1] == -1):
+
+                    calc = YahtzeePoint()
+                    value = calc.GetCalc(btn, self.dice)
+
+                    if(value == 0):
+                        dialog = xbmcgui.Dialog()        
+                        confirmed = dialog.yesno(addon.getLocalizedString(3042),
+                                                 addon.getLocalizedString(3043),
+                                                 addon.getLocalizedString(3044),
+                                                 addon.getLocalizedString(3012 + btn)
+                                                 )
+                                         
+                        if confirmed:
+                            self.SetValuePlayer(self.actualPlayer, btn-1, 0)
+                            self.updatePoints()
+                            self.NextPlayer()
+                    else:
+                        self.SetValuePlayer(self.actualPlayer, btn-1, value)
+                        self.updatePoints()
+                        self.NextPlayer()
+
+        # new game
+        if(control_id == 5002):
+            if(self.gameOn):
+                 dialog = xbmcgui.Dialog()
+                 confirmed = dialog.yesno(addon.getLocalizedString(3034),
+                                          addon.getLocalizedString(3035),
+                                          addon.getLocalizedString(3036)
+                                          )
+                 if confirmed:
+                     self.NewGame()
             else:
-                self.pointsP1[btn-1] = value
-                self.updatePoints()
-            pass
+                self.NewGame()
 
         # set player
         if(control_id == 5003):
@@ -163,7 +168,7 @@ class Game(xbmcgui.WindowXML):
                     self.player = self.player + 1
                 else:
                     self.player = 1
-                
+
                 if(self.player + self.computer) > 4:
                    self.computer = 4 - self.player
                 self.updateToggleButtons(0)
@@ -172,7 +177,9 @@ class Game(xbmcgui.WindowXML):
         if(control_id == 5004):
             if(not self.gameOn):
                 if self.computer < (4 - self.player):
-                    self.computer = self.computer + 1
+                    # not implemeneted yet
+                    #self.computer = self.computer + 1
+                    pass
                 else:
                     self.computer = 0
                 self.updateToggleButtons(0)
@@ -191,15 +198,42 @@ class Game(xbmcgui.WindowXML):
                 self.round = 1
                 self.diceOn = True
                 
+                # reset hold
                 for i in range(5):
                     self.hold[i] = False
-                self.updateToggleButtons(control_id)
-                self.diceOn = True
-                xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
-            else:
-                xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
+
+                if(self.soundOn):
+                    xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
                 self.diceOn = True
                 self.diceFinished = False
+                
+                self.updateToggleButtons(control_id);
+            else:
+                if(self.actualTry < 3):
+                    self.actualTry = self.actualTry + 1
+                    self.diceOn = True
+                    self. diceFinished = False
+
+                    if(self.soundOn):
+                        xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
+                    self.diceOn = True
+                    self.diceFinished = False
+
+                    self.updateToggleButtons(control_id);
+
+        # give me a tip
+        if(control_id == 5009):
+            dialog = xbmcgui.Dialog()
+            confirmed = dialog.ok(addon.getLocalizedString(3025),
+                                  '..... sooon'
+                                  )
+
+        # whats this
+        if(control_id == 5010):
+            dialog = xbmcgui.Dialog()
+            confirmed = dialog.ok(addon.getLocalizedString(3025),
+                                  addon.getLocalizedString(3050)
+                                  )
 
 
         if(self.actualTry > 0) and self.gameOn and not self.diceOn and self.diceFinished:
@@ -242,6 +276,59 @@ class Game(xbmcgui.WindowXML):
                 self.diceCnt = 0
             xbmc.sleep(200)
 
+    def GetValuePlayer(self, playerNo):
+        if(playerNo == 1):
+            return self.pointsP1
+        if(playerNo == 2):
+            return self.pointsP2
+        if(playerNo == 3):
+            return self.pointsP3
+        if(playerNo == 4):
+            return self.pointsP4
+
+    def SetValuePlayer(self, playerNo, field, value):
+        if(playerNo == 1):
+            self.pointsP1[field] = value
+        if(playerNo == 2):
+            self.pointsP2[field] = value
+        if(playerNo == 3):
+            self.pointsP3[field] = value
+        if(playerNo == 4):
+            self.pointsP4[field] = value
+
+    def NewGame(self):
+
+          self.gameOn = False
+          self.diceOn = False
+          self.diceFinished = False
+          
+          for i in range(15):
+              self.pointsP1[i] = -1
+              self.pointsP2[i] = -1
+              self.pointsP3[i] = -1
+              self.pointsP4[i] = -1
+
+          self.updateToggleButtons(0)
+          self.updatePoints()
+
+    def NextPlayer(self):
+          self.actualTry = 0
+          self.actualPlayer = self.actualPlayer + 1
+
+          #reset hold
+          for i in range(5):
+              self.hold[i] = False
+
+          if (self.actualPlayer > self.player):
+              self.actualPlayer = 1
+              self.round = self.round + 1
+              if (self.round  == 14):
+                  self.gameOn = False # gane over
+                  if(self.soundOn):
+                      xbmc.playSFX(MEDIA_PATH + '\\applaus.wav')   
+
+          self.updateToggleButtons(0);
+
     def updateToggleButtons(self, control_id):
 
         # update player settings
@@ -254,13 +341,14 @@ class Game(xbmcgui.WindowXML):
         # update actual player
         self.p0x = self.getControl(5006)
         if(self.gameOn):
-            self.p0x.setLabel('PLAYER ' + str(self.actualPlayer))
+            self.p0x.setLabel(addon.getLocalizedString(3006) + ' ' + str(self.actualPlayer))
         else:
-            self.p0x.setLabel('GAME OVER')
+            self.p0x.setLabel(addon.getLocalizedString(3005))
 
         # protect for startup
         self.p0x = self.getControl(5007)
-        self.p0x.setLabel('ROUND ' + str(self.round))
+        self.p0x.setLabel(addon.getLocalizedString(3007) + ' ' + str(self.actualTry) + ' ' +
+                          addon.getLocalizedString(3008) + ' 3')
 
         if len(self.hold) < 4:
             return
@@ -294,14 +382,26 @@ class Game(xbmcgui.WindowXML):
 
     def updatePoints(self):
         for i in range(15):
-	    self.p0x = self.getControl(5400+ i)
-	    self.p0x.setLabel(str(self.pointsP1[i]))
-	    self.p0x = self.getControl(5500+ i)
-	    self.p0x.setLabel(str(self.pointsP2[i]))
-	    self.p0x = self.getControl(5600+ i)
-	    self.p0x.setLabel(str(self.pointsP3[i]))
-	    self.p0x = self.getControl(5700+ i)
-            self.p0x.setLabel(str(self.pointsP4[i]))
+            self.p0x = self.getControl(5400+ i)
+            if(self.pointsP1[i] >= 0):
+                self.p0x.setLabel(str(self.pointsP1[i]))
+            else:
+                self.p0x.setLabel('..')
+            self.p0x = self.getControl(5500+ i)
+            if(self.pointsP2[i] >= 0):
+                self.p0x.setLabel(str(self.pointsP2[i]))
+            else:
+                self.p0x.setLabel('..')
+            self.p0x = self.getControl(5600+ i)
+            if(self.pointsP3[i] >= 0):
+                self.p0x.setLabel(str(self.pointsP3[i]))
+            else:
+                self.p0x.setLabel('..')
+            self.p0x = self.getControl(5700+ i)
+            if(self.pointsP4[i] >= 0):
+                self.p0x.setLabel(str(self.pointsP4[i]))
+            else:
+                self.p0x.setLabel('..')
 
     def log(self, msg):
         xbmc.log('[ADDON][%s] %s' % ('TEST', msg.encode('utf-8')),
