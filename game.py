@@ -48,7 +48,8 @@ LIB_PATH = os.path.join(
 )
 
 ACTION_PREVIOUS_MENU = 10
-ACTION_SELECT_ITEM = 7
+ACTION_MUTE = 91
+ACTION_NAV_BACK = 92
 
 class Game(xbmcgui.WindowXML):
 
@@ -109,22 +110,24 @@ class Game(xbmcgui.WindowXML):
     def onAction(self, action):
         action_id = action.getId()
         focus_id = self.getFocusId()
-
+        
         if action_id == ACTION_PREVIOUS_MENU:
             self.close()
+        if action_id == ACTION_MUTE:
+            self.close()
+        if action_id == ACTION_NAV_BACK:
+            self.close()            
 
     def onFocus(self, control_id):
         self.updateToggleButtons(control_id)
 
     def onClick(self, control_id):
 
-        self.log('OnClick ' + str(control_id))
-
         # set points
         if(control_id >= 5299) and (control_id < 5320):
             btn = control_id - 5300 + 1
 
-            if(self.gameOn and not self.diceOn):
+            if(self.gameOn and not self.diceOn and (self.actualTry > 0)):
                 points = self.GetValuePlayer(self.actualPlayer)
                 if(points[btn-1] == -1):
 
@@ -192,18 +195,18 @@ class Game(xbmcgui.WindowXML):
         # dice
         if(control_id == 5008):
             if(not self.gameOn):
+            
+                self.NewGame()
+                
                 self.gameOn = True
                 self.actualPlayer = 1
                 actualTry = 1
-                self.round = 1
+
                 self.diceOn = True
                 
-                # reset hold
-                for i in range(5):
-                    self.hold[i] = False
-
                 if(self.soundOn):
-                    xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
+                    xbmc.playSFX(MEDIA_PATH + '\\dice.wav')
+                    
                 self.diceOn = True
                 self.diceFinished = False
                 
@@ -215,7 +218,7 @@ class Game(xbmcgui.WindowXML):
                     self. diceFinished = False
 
                     if(self.soundOn):
-                        xbmc.playSFX(MEDIA_PATH + '\\dice.snd')
+                        xbmc.playSFX(MEDIA_PATH + '\\dice.wav')
                     self.diceOn = True
                     self.diceFinished = False
 
@@ -235,7 +238,6 @@ class Game(xbmcgui.WindowXML):
                                   addon.getLocalizedString(3050)
                                   )
 
-
         if(self.actualTry > 0) and self.gameOn and not self.diceOn and self.diceFinished:
             if(control_id == 5200):
                 self.hold[0] = not self.hold[0]
@@ -252,11 +254,6 @@ class Game(xbmcgui.WindowXML):
             if(control_id == 5204):
                 self.hold[4] = not self.hold[4]
                 self.updateToggleButtons(control_id)
-
-        if control_id == self.CONTROL_ID_RESTART:
-            self.start_game()
-        elif control_id == self.CONTROL_ID_EXIT:
-            self.exit()
 
     def timer_thread(self):
         while not xbmc.abortRequested:
@@ -287,17 +284,27 @@ class Game(xbmcgui.WindowXML):
             return self.pointsP4
 
     def SetValuePlayer(self, playerNo, field, value):
-        if(playerNo == 1):
-            self.pointsP1[field] = value
-        if(playerNo == 2):
-            self.pointsP2[field] = value
-        if(playerNo == 3):
-            self.pointsP3[field] = value
-        if(playerNo == 4):
-            self.pointsP4[field] = value
+    
+        points = self.GetValuePlayer(playerNo)
+        points[field] = value
+        
+        top = 0
+        for i in range(6):
+            if(points[i] > 0):
+                top = top + points[i]
+                if(top > 62):
+                    top = top + 35      
+        bottom = 0
+        for i in range(7,14):
+	    if(points[i] > 0):
+                bottom = bottom + points[i]
+                
+        points[6] = top
+        points[14] = top + bottom      
 
     def NewGame(self):
-
+    
+          self.round = 1
           self.gameOn = False
           self.diceOn = False
           self.diceFinished = False
@@ -307,6 +314,10 @@ class Game(xbmcgui.WindowXML):
               self.pointsP2[i] = -1
               self.pointsP3[i] = -1
               self.pointsP4[i] = -1
+              
+          # reset hold
+	  for i in range(5):
+              self.hold[i] = False
 
           self.updateToggleButtons(0)
           self.updatePoints()
@@ -323,7 +334,7 @@ class Game(xbmcgui.WindowXML):
               self.actualPlayer = 1
               self.round = self.round + 1
               if (self.round  == 14):
-                  self.gameOn = False # gane over
+                  self.gameOn = False # game over
                   if(self.soundOn):
                       xbmc.playSFX(MEDIA_PATH + '\\applaus.wav')   
 

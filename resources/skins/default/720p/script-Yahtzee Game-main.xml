@@ -5,6 +5,13 @@
     <controls>    
         <include>DefaultBackground</include>
         <control type="group" id="20">
+         <control type="image" id="9898">
+	    <posx>730</posx>
+	    <posy>300</posy>
+	    <width>335</width>
+	    <height>215</height>
+	    <texture colordiffuse="30FFFFFF">my yahtzee.png</texture>
+         </control>
          <control type="button" id="5002">
             <top>100</top>
             <left>120l</left>
@@ -15,7 +22,7 @@
             <texturenofocus>button.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
 	    <ondown>5003</ondown>
           </control>
           <control type="button" id="5003">
@@ -28,7 +35,7 @@
             <texturenofocus>button.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
             <onup>5002</onup>
 	    <ondown>5004</ondown>
           </control>
@@ -42,7 +49,7 @@
             <texturenofocus>button.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
             <onup>5003</onup>
             <ondown>5005</ondown>
            </control>
@@ -66,7 +73,7 @@
             <alttexturenofocus></alttexturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
             <onup>5004</onup>
 	    <ondown>5008</ondown>
           </control>
@@ -100,7 +107,7 @@
             <texturenofocus>button.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
             <onup>5005</onup>
 	    <ondown>5009</ondown>
           </control>
@@ -114,7 +121,7 @@
             <texturenofocus>button.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
             <onup>5008</onup>
 	    <ondown>5010</ondown>
           </control>
@@ -128,7 +135,7 @@
             <texturenofocus>button.png</texturenofocus>
             <align>center</align>
             <aligny>center</aligny>
-            <onright>5300</onright>
+            <onright>5200</onright>
             <onup>5009</onup>
           </control>
         </control>
@@ -300,6 +307,7 @@
 	   <align>center</align>
 	   <aligny>center</aligny>
 	   <onleft>5008</onleft>
+	   <onright>5200</onright>
 	   <onup>5200</onup>
 	   <ondown>5301</ondown>
         </control>
