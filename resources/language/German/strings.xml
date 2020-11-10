@@ -47,4 +47,6 @@
     <string id="3045">M&#246;chten Sie wirklich</string>
     <string id="3046">das Spiel beenden ?</string>
     <string id="3050">Yahtzee ist ein popul&#228;res Spiel. Das Ziel ist es, die meisten Punkte mit 5 W&#252;rfel zu machen. Jede Runde darf man 3 mal w&#252;rfeln. Ein Spiel hat 13 Runden und jede Runde muss ein Kombination eingetragen werden. Wurde ein Kombination benutzt, ist sie nicht mehr verf&#252;gbar.</string>
+    <string id="3051">Sieg</string>
+	<string id="3052">Unentschieden</string>
 </strings>

@@ -47,4 +47,6 @@
     <string id="3045">Do you really want to</string>
     <string id="3046">exit the game ?</string> 
     <string id="3050">Yahtzee is a popular game. The goal of the game is to score most point by rolling five dice. Every turn you can dice 3 times. A game has 13 rounds and every round you have to choose a comination. Once a combination is used, you cannot use this one again.</string> 
+    <string id="3051">WIN</string>
+	<string id="3052">DRAW</string>
 </strings>
