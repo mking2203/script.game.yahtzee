@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<addon id="script.game.yahtzee" name="Yahtzee Game" version="0.4.1" provider-name="Mark Koenig">
+<addon id="script.game.yahtzee" name="Yahtzee Game" version="0.5.1" provider-name="Mark König">
     <requires>
-        <import addon="xbmc.python" version="2.10.0"/>
+        <import addon="xbmc.python" version="2.14.0"/>
     </requires>
     <extension point="xbmc.python.script" library="game.py"/>
     <extension point="xbmc.addon.metadata">

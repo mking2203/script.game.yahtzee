@@ -1,3 +1,8 @@
+[B]Version 0.5.1 - 2020-11-11[/B]
+add computer names for the player
+add high scores
+[B]Version 0.5.0 - 2020-11-10[/B]
+add computer player
 [B]Version 0.4.1 - 2018-01-21[/B]
 fix for the path
 [B]Version 0.4.0 - 2018-01-21[/B]

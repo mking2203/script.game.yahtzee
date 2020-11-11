@@ -46,6 +46,8 @@ LIB_PATH = os.path.join(
     'lib'
 )
 
+SPEED = addon.getSetting('speed')
+
 libs  = xbmc.translatePath(os.path.join(ADDON_PATH, 'resources', 'lib' ).encode("utf-8") ).decode("utf-8")
 sys.path.append(libs)
 
@@ -80,6 +82,16 @@ class Game(xbmcgui.WindowXML):
     diceFinished = 0
 
     delayComputer = 0
+
+    time = 300
+    delay = 5
+
+    if (SPEED == '1'):
+        time = 500
+        delay = 10
+    if (SPEED == '2'):
+        time = 800
+        delay = 15
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -310,6 +322,7 @@ class Game(xbmcgui.WindowXML):
     def timer_thread(self):
         while not xbmc.abortRequested:
             if(self.diceOn):
+                self.delayComputer = 0
                 self.diceCnt = self.diceCnt +1
                 if(self.diceCnt < 10):
                     for w in range(5):
@@ -329,18 +342,32 @@ class Game(xbmcgui.WindowXML):
                 self.diceCnt = 0
 
             self.delayComputer = self.delayComputer + 1
-            if(self.delayComputer > 5):
+            if(self.delayComputer > self.delay):
                 self.delayComputer = 0
 
                 # computer first dice
                 if(self.actualPlayer > self.player):
                     if(not self.diceOn):
 
+                        namePlayer = ''
+                        if(self.actualPlayer == 1):
+                            namePlayer = addon.getSetting('ply1') + ' (comp)'
+                        elif(self.actualPlayer == 2):
+                            namePlayer = addon.getSetting('ply2') + ' (comp)'
+                        elif(self.actualPlayer == 3):
+                            namePlayer = addon.getSetting('ply3') + ' (comp)'
+                        elif(self.actualPlayer == 4):
+                            namePlayer = addon.getSetting('ply4') + ' (comp)'
+
                         if(self.actualTry == 0):
 
                             self.actualTry = self.actualTry + 1
                             self.updateTry()
-                            xbmcgui.Dialog().notification(ADDON_NAME, addon.getLocalizedString(3006) + ' ' + str(self.actualPlayer) + '\n1. ' + addon.getLocalizedString(3007), time=300)
+
+                            # player x first dice
+                            xbmcgui.Dialog().notification(ADDON_NAME,
+                                                          namePlayer + '\n1. ' + addon.getLocalizedString(3007),
+                                                          time= self.time)
 
                             self.diceOn = True
                             self.diceFinished = False
@@ -418,7 +445,11 @@ class Game(xbmcgui.WindowXML):
 
                                 self.actualTry = self.actualTry + 1
                                 self.updateTry()
-                                xbmcgui.Dialog().notification(ADDON_NAME, addon.getLocalizedString(3006) + ' ' + str(self.actualPlayer) + '\n' +  str(self.actualTry)  + '. ' + addon.getLocalizedString(3007), time=300)
+
+                                # player x (actual) dice
+                                xbmcgui.Dialog().notification(ADDON_NAME,
+                                                              namePlayer + '\n' +  str(self.actualTry)  + '. ' + addon.getLocalizedString(3007),
+                                                              time= self.time)
 
                                 self.diceOn = True
                                 self.diceFinished = False
@@ -428,6 +459,7 @@ class Game(xbmcgui.WindowXML):
                                     xbmc.playSFX(MEDIA_PATH + '\\dice.wav')
 
                             else:
+                                # we can already set a position on the table
 
                                 sel = self.GetYahzeeMove(3)
                                 btn = sel + 1
@@ -436,7 +468,10 @@ class Game(xbmcgui.WindowXML):
                                 if(btn > 6):
                                     btn = btn + 1
 
-                                xbmcgui.Dialog().notification(ADDON_NAME, addon.getLocalizedString(3006) + ' ' + str(self.actualPlayer) + '\n' + addon.getLocalizedString(3012 + btn), time=500)
+                                # player x set field y
+                                xbmcgui.Dialog().notification(ADDON_NAME,
+                                                              namePlayer + '\n' + addon.getLocalizedString(3012 + btn),
+                                                              time= self.time)
                                 value = yahtzee_points.GetCalc(btn, self.dice)
 
                                 self.SetValuePlayer(self.actualPlayer, btn-1, value)
@@ -444,6 +479,7 @@ class Game(xbmcgui.WindowXML):
                                 self.NextPlayer()
 
                         elif (self.actualTry == 3):
+                            # last try now set a position on the table
 
                             sel = self.GetYahzeeMove(self.actualTry)
                             btn = sel + 1
@@ -452,7 +488,10 @@ class Game(xbmcgui.WindowXML):
                             if(btn > 6):
                                 btn = btn + 1
 
-                            xbmcgui.Dialog().notification(ADDON_NAME, addon.getLocalizedString(3006) + ' ' + str(self.actualPlayer) + '\n' + addon.getLocalizedString(3012 + btn), time=500)
+                            # player x set field y
+                            xbmcgui.Dialog().notification(ADDON_NAME,
+                                                          namePlayer + '\n' + addon.getLocalizedString(3012 + btn),
+                                                          time= self.time)
                             value = yahtzee_points.GetCalc(btn, self.dice)
 
                             self.SetValuePlayer(self.actualPlayer, btn-1, value)
@@ -557,6 +596,8 @@ class Game(xbmcgui.WindowXML):
 
           self.updateToggleButtons(0);
           self.setFocusId(5008)
+
+          self.delayComputer = 0
 
     def updateToggleButtons(self, control_id):
 
