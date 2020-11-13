@@ -58,4 +58,6 @@
     <string id="30011">fast</string>
     <string id="30012">medium</string>
     <string id="30013">slow</string>
+	<string id="30014">show notification</string>
+	<string id="30020">Loading values, please wait!</string>
 </strings>

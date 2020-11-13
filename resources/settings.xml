@@ -8,6 +8,8 @@
     <setting type="sep" />
 	<setting id="speed" type="select" label="30010" lvalues="30011|30012|30013" />
 	<setting type="sep" />
+	<setting id="notify" type="bool" label="30014" default="true"/>
+	<setting type="sep" />
     <setting id="hi1" type="text" label="hi1" visible="false"/>
     <setting id="hi2" type="text" label="hi2" visible="false"/>
     <setting id="hi3" type="text" label="hi3" visible="false"/>

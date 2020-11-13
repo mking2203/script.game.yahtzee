@@ -58,4 +58,6 @@
     <string id="30011">schnell</string>
     <string id="30012">mittel</string>
     <string id="30013">langsam</string>
+	<string id="30014">Zeige Hinweise</string>
+	<string id="30020">Lade berechnetet Werte, bitte warten!</string>
 </strings>
