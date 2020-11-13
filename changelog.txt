@@ -1,3 +1,6 @@
+[B]Version 0.5.2 - 2020-11-13[/B]
+small correction for winner (name)
+less notify's
 [B]Version 0.5.1 - 2020-11-11[/B]
 add names for the player / computer
 add game speed settings
