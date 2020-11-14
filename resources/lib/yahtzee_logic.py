@@ -1006,7 +1006,10 @@ def ReadRestgewinn():
         restgewinn.append(float(sp[i].replace(',','.')))
         p =  i * 100 / 524288
         pDialog.update(p)
+        if (pDialog.iscanceled()): return False
     pDialog.close()
+
+    return True
 
 def IndexSpielstand(spielstand):
 

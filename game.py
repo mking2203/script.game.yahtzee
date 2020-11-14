@@ -109,7 +109,7 @@ class Game(xbmcgui.WindowXML):
         self.p0x.setLabel(self.GetPlayerName(4, False))
 
         # init vars
-        yahtzee_logic.ReadRestgewinn()
+        result = yahtzee_logic.ReadRestgewinn()
 
         # init points
         for i in range(15):
@@ -137,6 +137,9 @@ class Game(xbmcgui.WindowXML):
 
         # focus the dice button
         self.setFocusId(5008)
+
+        if not result:
+            self.close()
 
     def onAction(self, action):
         action_id = action.getId()
