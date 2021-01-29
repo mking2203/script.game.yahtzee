@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#     Copyright (C) 2018 Mark König (mark.koenig@kleiner-schelm.de)
+#     Copyright (C) 2021 Mark König (mark.koenig@kleiner-schelm.de)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,27 +21,28 @@ import os
 import random
 from random import randint
 import time
-import thread
+import threading
 import string
 import sys
 
 import xbmc
+import xbmcvfs
 import xbmcaddon
 import xbmcgui
 
 addon = xbmcaddon.Addon()
 
 ADDON_NAME = addon.getAddonInfo('name')
-ADDON_PATH = addon.getAddonInfo('path').decode('utf-8')
+ADDON_PATH = addon.getAddonInfo('path')
 MEDIA_PATH = os.path.join(
-    xbmc.translatePath(ADDON_PATH),
+    xbmcvfs.translatePath(ADDON_PATH),
     'resources',
     'skins',
     'default',
     'media'
 )
 LIB_PATH = os.path.join(
-    xbmc.translatePath(ADDON_PATH),
+    xbmcvfs.translatePath(ADDON_PATH),
     'resources',
     'lib'
 )
@@ -49,7 +50,7 @@ LIB_PATH = os.path.join(
 SPEED = addon.getSetting('speed')
 NOTIFY = addon.getSetting('notify') == "true"
 
-libs  = xbmc.translatePath(os.path.join(ADDON_PATH, 'resources', 'lib' ).encode("utf-8") ).decode("utf-8")
+libs  = xbmcvfs.translatePath(os.path.join(ADDON_PATH, 'resources', 'lib'))
 sys.path.append(libs)
 
 import yahtzee_points
@@ -130,7 +131,7 @@ class Game(xbmcgui.WindowXML):
         # init the grid
 
         # start the timer thread
-        thread.start_new_thread(self.timer_thread, ())
+        threading.Thread(target=self.timer_thread).start()
         # start the game
 
         self.updateToggleButtons(0)
@@ -153,9 +154,9 @@ class Game(xbmcgui.WindowXML):
     def closeApp(self):
         # do you really ...
         dialog = xbmcgui.Dialog()
-        confirmed = dialog.yesno(addon.getLocalizedString(3025),
-                                 addon.getLocalizedString(3045),
-                                 addon.getLocalizedString(3046)
+        confirmed = dialog.yesno(addon.getLocalizedString(31025),
+                                 addon.getLocalizedString(31045) + '\n' +
+                                 addon.getLocalizedString(31046)
                                 )
         if confirmed:
             self.close()
@@ -185,10 +186,10 @@ class Game(xbmcgui.WindowXML):
 
                         if(value == 0):
                             dialog = xbmcgui.Dialog()
-                            confirmed = dialog.yesno(addon.getLocalizedString(3042),
-                                                     addon.getLocalizedString(3043),
-                                                     addon.getLocalizedString(3044),
-                                                     addon.getLocalizedString(3012 + btn)
+                            confirmed = dialog.yesno(addon.getLocalizedString(31042),
+                                                     addon.getLocalizedString(31043) + '\n' +
+                                                     addon.getLocalizedString(31044) + '\n' +
+                                                     addon.getLocalizedString(31012 + btn)
                                                      )
 
                             if confirmed:
@@ -206,9 +207,9 @@ class Game(xbmcgui.WindowXML):
 
                  # do you really ?
                  dialog = xbmcgui.Dialog()
-                 confirmed = dialog.yesno(addon.getLocalizedString(3034),
-                                          addon.getLocalizedString(3035),
-                                          addon.getLocalizedString(3036)
+                 confirmed = dialog.yesno(addon.getLocalizedString(31034),
+                                          addon.getLocalizedString(31035) + '\n' +
+                                          addon.getLocalizedString(31036)
                                           )
                  if confirmed:
                      self.NewGame()
@@ -266,27 +267,28 @@ class Game(xbmcgui.WindowXML):
                     #                                  self.GetPlayerName(self.actualPlayer, False) + '\n1. ' + addon.getLocalizedString(3007),
                     #                                  time= self.time)
             else:
-                if(self.actualPlayer <= self.player):
-                    # do we have still one open
-                    if(self.actualTry < 3):
-                        self.actualTry = self.actualTry + 1
-                        self.diceOn = True
-                        self.diceFinished = False
+                if not self.diceOn:
+                    if(self.actualPlayer <= self.player):
+                        # do we have still one open
+                        if(self.actualTry < 3):
+                            self.actualTry = self.actualTry + 1
+                            self.diceOn = True
+                            self.diceFinished = False
 
-                        if(self.soundOn):
-                            xbmc.playSFX(MEDIA_PATH + '\\dice.wav')
-                        self.updateToggleButtons(control_id);
+                            if(self.soundOn):
+                                xbmc.playSFX(MEDIA_PATH + '\\dice.wav')
+                            self.updateToggleButtons(control_id);
 
-                        #if(NOTIFY):
-                        #    xbmcgui.Dialog().notification(ADDON_NAME,
-                        #                              self.GetPlayerName(self.actualPlayer, False) + '\n' +str(self.actualTry) + '. ' + addon.getLocalizedString(3007),
-                        #                              time= self.time)
-                    else:
-                        # last try reached, now set a field
-                        dialog = xbmcgui.Dialog()
-                        confirmed = dialog.ok(addon.getLocalizedString(3025),
-                                      addon.getLocalizedString(3029)
-                                      )
+                            #if(NOTIFY):
+                            #    xbmcgui.Dialog().notification(ADDON_NAME,
+                            #                              self.GetPlayerName(self.actualPlayer, False) + '\n' +str(self.actualTry) + '. ' + addon.getLocalizedString(3007),
+                            #                              time= self.time)
+                        else:
+                            # last try reached, now set a field
+                            dialog = xbmcgui.Dialog()
+                            confirmed = dialog.ok(addon.getLocalizedString(31025),
+                                                  addon.getLocalizedString(31029)
+                                             )
 
         # give me a tip
         if(control_id == 5009):
@@ -305,15 +307,15 @@ class Game(xbmcgui.WindowXML):
 
                     if(testTry == 1):
                         if(value != 0):
-                            txt = addon.getLocalizedString(3012) + ' : ' + str(value)
+                            txt = addon.getLocalizedString(31012) + ' : ' + str(value)
                         else:
-                            txt = addon.getLocalizedString(3009)
+                            txt = addon.getLocalizedString(31009)
 
                     if(testTry == 2):
                         if(value != 0):
-                            txt = addon.getLocalizedString(3012) + ' : ' + str(value)
+                            txt = addon.getLocalizedString(31012) + ' : ' + str(value)
                         else:
-                            txt = addon.getLocalizedString(3009)
+                            txt = addon.getLocalizedString(31009)
 
                     if(testTry == 3):
 
@@ -323,19 +325,19 @@ class Game(xbmcgui.WindowXML):
 
                         points = yahtzee_points.GetCalc(x + 1 , self.dice)
                         if(points > 0):
-                            txt = addon.getLocalizedString(3040) + ' : ' + addon.getLocalizedString(3013 + x)
+                            txt = addon.getLocalizedString(31040) + ' : ' + addon.getLocalizedString(31013 + x)
                         else:
-                            txt = addon.getLocalizedString(3042) + ' : ' + addon.getLocalizedString(3013 + x)
+                            txt = addon.getLocalizedString(31042) + ' : ' + addon.getLocalizedString(31013 + x)
 
                     dialog = xbmcgui.Dialog()
-                    confirmed = dialog.ok(addon.getLocalizedString(3010),
+                    confirmed = dialog.ok(addon.getLocalizedString(31010),
                                           txt)
 
         # what's this?
         if(control_id == 5010):
             dialog = xbmcgui.Dialog()
-            confirmed = dialog.ok(addon.getLocalizedString(3025),
-                                  addon.getLocalizedString(3050)
+            confirmed = dialog.ok(addon.getLocalizedString(31025),
+                                  addon.getLocalizedString(31050)
                                   )
 
         # toggle hold button for the player
@@ -358,7 +360,7 @@ class Game(xbmcgui.WindowXML):
                     self.updateToggleButtons(control_id)
 
     def timer_thread(self):
-        while not xbmc.abortRequested:
+        while not xbmc.Monitor().abortRequested():
             if(self.diceOn):
                 self.delayComputer = 0
                 self.diceCnt = self.diceCnt +1
@@ -420,15 +422,15 @@ class Game(xbmcgui.WindowXML):
                                     self.hold[4] = False;
 
                                     # decode value
-                                    a = value / 10000
+                                    a = int(value / 10000)
                                     value = value - (a * 10000)
-                                    b = value / 1000
+                                    b = int(value / 1000)
                                     value = value - (b * 1000)
-                                    c = value / 100
+                                    c = int(value / 100)
                                     value = value - (c * 100)
-                                    d = value / 10
+                                    d = int(value  / 10)
                                     value = value - (d * 10)
-                                    e = value
+                                    e = int(value)
 
                                     #check first digit
                                     if(a > 0):
@@ -504,7 +506,7 @@ class Game(xbmcgui.WindowXML):
                                     # player x set field y
                                     if(NOTIFY):
                                         xbmcgui.Dialog().notification(ADDON_NAME,
-                                                                      self.GetPlayerName(self.actualPlayer, True) + '\n' + addon.getLocalizedString(3012 + btn),
+                                                                      self.GetPlayerName(self.actualPlayer, True) + '\n' + addon.getLocalizedString(31012 + btn),
                                                                       time= self.time)
                                     value = yahtzee_points.GetCalc(btn, self.dice)
 
@@ -530,14 +532,25 @@ class Game(xbmcgui.WindowXML):
                                 if(btn > 6):
                                     btn = btn + 1
 
-                                # player x set field y
-                                if(NOTIFY):
-                                    xbmcgui.Dialog().notification(ADDON_NAME,
-                                                                  self.GetPlayerName(self.actualPlayer, True) + '\n' + addon.getLocalizedString(3012 + btn),
-                                                                  time= self.time)
-
+                                # get value
                                 value = yahtzee_points.GetCalc(btn, self.dice)
 
+                                # notify what
+                                if(NOTIFY):
+                                    if(value > 0):
+                                        # we have a value
+                                        xbmcgui.Dialog().notification(ADDON_NAME,
+                                                                  self.GetPlayerName(self.actualPlayer, True) + '\n' + addon.getLocalizedString(31012 + btn),
+                                                                  time= self.time)
+                                    else:
+                                        # we discard a field
+                                        xbmcgui.Dialog().notification(ADDON_NAME,
+                                                                  self.GetPlayerName(self.actualPlayer, True) + '\n' +
+                                                                  addon.getLocalizedString(31042) + ': ' + addon.getLocalizedString(31012 + btn),
+                                                                  time= self.time)
+
+
+                                # player x set field y
                                 self.SetValuePlayer(self.actualPlayer, btn-1, value)
                                 self.updatePoints()
 
@@ -668,14 +681,14 @@ class Game(xbmcgui.WindowXML):
                 if(mode == 'win'):
                     dialog = xbmcgui.Dialog()
                     confirmed = dialog.ok(ADDON_NAME,
-                                      addon.getLocalizedString(3051),
+                                      addon.getLocalizedString(31051) + '\n' +
                                       self.GetPlayerName(maxPlayer,False) + ": " + str(maxPoints))
                 else:
                     # draw
                     dialog = xbmcgui.Dialog()
                     confirmed = dialog.ok(ADDON_NAME,
-                                      addon.getLocalizedString(3052),
-                                      addon.getLocalizedString(3027) + ": " + str(maxPoints))
+                                      addon.getLocalizedString(31052) + '\n' +
+                                      addon.getLocalizedString(31027) + ": " + str(maxPoints))
 
 
         self.updateToggleButtons(0);
@@ -697,22 +710,22 @@ class Game(xbmcgui.WindowXML):
 
         # update player settings
         self.p0x = self.getControl(5003)
-        self.p0x.setLabel(addon.getLocalizedString(3002) + str(self.player))
+        self.p0x.setLabel(addon.getLocalizedString(31002) + str(self.player))
 
         self.p0x = self.getControl(5004)
-        self.p0x.setLabel(addon.getLocalizedString(3003) + str(self.computer))
+        self.p0x.setLabel(addon.getLocalizedString(31003) + str(self.computer))
 
         # update actual player
         self.p0x = self.getControl(5006)
         if(self.gameOn):
-            self.p0x.setLabel(addon.getLocalizedString(3006) + ' ' + str(self.actualPlayer))
+            self.p0x.setLabel(addon.getLocalizedString(31006) + ' ' + str(self.actualPlayer))
         else:
-            self.p0x.setLabel(addon.getLocalizedString(3005))
+            self.p0x.setLabel(addon.getLocalizedString(31005))
 
         # protect for startup
         self.p0x = self.getControl(5007)
-        self.p0x.setLabel(addon.getLocalizedString(3007) + ' ' + str(self.actualTry) + ' ' +
-                          addon.getLocalizedString(3008) + ' 3')
+        self.p0x.setLabel(addon.getLocalizedString(31007) + ' ' + str(self.actualTry) + ' ' +
+                          addon.getLocalizedString(31008) + ' 3')
 
         if len(self.hold) < 4:
             return
@@ -746,22 +759,22 @@ class Game(xbmcgui.WindowXML):
 
     def updatePoints(self):
         for i in range(15):
-            self.p0x = self.getControl(5400+ i)
+            self.p0x = self.getControl(5400 + i)
             if(self.pointsP1[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP1[i]))
             else:
                 self.p0x.setLabel('..')
-            self.p0x = self.getControl(5500+ i)
+            self.p0x = self.getControl(5500 + i)
             if(self.pointsP2[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP2[i]))
             else:
                 self.p0x.setLabel('..')
-            self.p0x = self.getControl(5600+ i)
+            self.p0x = self.getControl(5600 + i)
             if(self.pointsP3[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP3[i]))
             else:
                 self.p0x.setLabel('..')
-            self.p0x = self.getControl(5700+ i)
+            self.p0x = self.getControl(5700 + i)
             if(self.pointsP4[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP4[i]))
             else:
@@ -769,8 +782,8 @@ class Game(xbmcgui.WindowXML):
 
     def updateTry(self):
         self.p0x = self.getControl(5007)
-        self.p0x.setLabel(addon.getLocalizedString(3007) + ' ' + str(self.actualTry) + ' ' +
-                          addon.getLocalizedString(3008) + ' 3')
+        self.p0x.setLabel(addon.getLocalizedString(31007) + ' ' + str(self.actualTry) + ' ' +
+                          addon.getLocalizedString(31008) + ' 3')
 
     def GetYahzeeMove(self, actTry):
         data = []
@@ -788,8 +801,8 @@ class Game(xbmcgui.WindowXML):
         return yahtzee_logic.EinzelAbfrage(data)
 
     def log(self, msg):
-        xbmc.log('[ADDON][%s] %s' % ('TEST', msg.encode('utf-8')),
-                 level=xbmc.LOGNOTICE)
+        xbmc.log('[ADDON][%s] %s' % ('TEST', msg),
+                 level=xbmc.LOGDEBUG)
 
 # ----------------------------------------------------------------------------------------------------
 

@@ -17,7 +17,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3001]</label>
+				<label>$ADDON[script.game.yahtzee 31001]</label>
 				<texturefocus>button_active.png</texturefocus>
 				<texturenofocus>button.png</texturenofocus>
 				<align>center</align>
@@ -30,7 +30,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3002]</label>
+				<label>$ADDON[script.game.yahtzee 31002]</label>
 				<texturefocus>button_active.png</texturefocus>
 				<texturenofocus>button.png</texturenofocus>
 				<align>center</align>
@@ -44,7 +44,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3003]</label>
+				<label>$ADDON[script.game.yahtzee 31003]</label>
 				<texturefocus>button_active.png</texturefocus>
 				<texturenofocus>button.png</texturenofocus>
 				<align>center</align>
@@ -65,7 +65,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3004]</label>
+				<label>$ADDON[script.game.yahtzee 31004]</label>
 				<texturefocus/>
 				<texturenofocus/>
 				<alttexturefocus/>
@@ -99,7 +99,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3009]</label>
+				<label>$ADDON[script.game.yahtzee 31009]</label>
 				<texturefocus>button_active.png</texturefocus>
 				<texturenofocus>button.png</texturenofocus>
 				<align>center</align>
@@ -113,7 +113,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3010]</label>
+				<label>$ADDON[script.game.yahtzee 31010]</label>
 				<texturefocus>button_active.png</texturefocus>
 				<texturenofocus>button.png</texturenofocus>
 				<align>center</align>
@@ -127,7 +127,7 @@
 				<left>120l</left>
 				<width>200</width>
 				<height>70</height>
-				<label>$ADDON[script.game.yahtzee 3011]</label>
+				<label>$ADDON[script.game.yahtzee 31011]</label>
 				<texturefocus>button_active.png</texturefocus>
 				<texturenofocus>button.png</texturenofocus>
 				<align>center</align>
@@ -219,7 +219,7 @@
 			<left>420</left>
 			<width>105</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3012]</label>
+			<label>$ADDON[script.game.yahtzee 31012]</label>
 			<texturefocus/>
 			<texturenofocus/>
 			<alttexturefocus/>
@@ -242,7 +242,7 @@
 			<left>590</left>
 			<width>105</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3012]</label>
+			<label>$ADDON[script.game.yahtzee 31012]</label>
 			<texturefocus/>
 			<texturenofocus/>
 			<alttexturefocus/>
@@ -265,7 +265,7 @@
 			<left>760</left>
 			<width>105</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3012]</label>
+			<label>$ADDON[script.game.yahtzee 31012]</label>
 			<texturefocus/>
 			<texturenofocus/>
 			<alttexturefocus/>
@@ -288,7 +288,7 @@
 			<left>930</left>
 			<width>105</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3012]</label>
+			<label>$ADDON[script.game.yahtzee 31012]</label>
 			<texturefocus/>
 			<texturenofocus/>
 			<alttexturefocus/>
@@ -311,7 +311,7 @@
 			<left>1100</left>
 			<width>105</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3012]</label>
+			<label>$ADDON[script.game.yahtzee 31012]</label>
 			<texturefocus/>
 			<texturenofocus/>
 			<alttexturefocus/>
@@ -326,7 +326,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3013]</label>
+			<label>$ADDON[script.game.yahtzee 31013]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -341,7 +341,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3014]</label>
+			<label>$ADDON[script.game.yahtzee 31014]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -355,7 +355,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3015]</label>
+			<label>$ADDON[script.game.yahtzee 31015]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -369,7 +369,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3016]</label>
+			<label>$ADDON[script.game.yahtzee 31016]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -383,7 +383,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3017]</label>
+			<label>$ADDON[script.game.yahtzee 31017]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -397,7 +397,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3018]</label>
+			<label>$ADDON[script.game.yahtzee 31018]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -413,14 +413,14 @@
 			<height>45</height>
 			<align>center</align>
 			<aligny>center</aligny>
-			<label>$ADDON[script.game.yahtzee 3019]</label>
+			<label>$ADDON[script.game.yahtzee 31019]</label>
 		</control>
 		<control type="button" id="5307">
 			<top>430</top>
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3020]</label>
+			<label>$ADDON[script.game.yahtzee 31020]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -434,7 +434,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3021]</label>
+			<label>$ADDON[script.game.yahtzee 31021]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -448,7 +448,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3022]</label>
+			<label>$ADDON[script.game.yahtzee 31022]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -462,7 +462,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3023]</label>
+			<label>$ADDON[script.game.yahtzee 31023]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -476,7 +476,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3024]</label>
+			<label>$ADDON[script.game.yahtzee 31024]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -490,7 +490,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3025]</label>
+			<label>$ADDON[script.game.yahtzee 31025]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -504,7 +504,7 @@
 			<left>350</left>
 			<width>220</width>
 			<height>45</height>
-			<label>$ADDON[script.game.yahtzee 3026]</label>
+			<label>$ADDON[script.game.yahtzee 31026]</label>
 			<texturefocus>button_active.png</texturefocus>
 			<texturenofocus>button.png</texturenofocus>
 			<align>center</align>
@@ -519,7 +519,7 @@
 			<height>45</height>
 			<align>center</align>
 			<aligny>center</aligny>
-			<label>$ADDON[script.game.yahtzee 3027]</label>
+			<label>$ADDON[script.game.yahtzee 31027]</label>
 		</control>
 		<control type="label" id="5400">
 			<top>190</top>

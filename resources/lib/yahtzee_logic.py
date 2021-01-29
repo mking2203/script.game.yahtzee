@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#     Copyright (C) 2018 Mark König (mark.koenig@kleiner-schelm.de)
+#     Copyright (C) 2021 Mark König (mark.koenig@kleiner-schelm.de)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import xbmcgui
 import os
 
 addon = xbmcaddon.Addon()
-ADDON_PATH = addon.getAddonInfo('path').decode('utf-8')
+ADDON_PATH = addon.getAddonInfo('path')
 DATAFILE = os.path.join(
     ADDON_PATH,
     'Yahtzee.dat')
@@ -1005,7 +1005,7 @@ def ReadRestgewinn():
     for i in range(len(sp) - 1):
         restgewinn.append(float(sp[i].replace(',','.')))
         p =  i * 100 / 524288
-        pDialog.update(p)
+        pDialog.update(int(p))
         if (pDialog.iscanceled()): return False
     pDialog.close()
 
@@ -1044,7 +1044,7 @@ def Berechne_w3(index):
 
     tempindex = index;
     summeoben = tempindex % 64
-    tempindex = tempindex /64
+    tempindex = int(tempindex / 64)
 
     frei = []
     for i in range(13):
@@ -1055,7 +1055,7 @@ def Berechne_w3(index):
             frei[platz] = 1
         else:
             frei[platz] = 0
-        tempindex = tempindex / 2
+        tempindex = int(tempindex / 2)
 
     for wurfindex in range(252):
         maxerwartung = 0;
@@ -1069,7 +1069,7 @@ def Berechne_w3(index):
                     if (neuesummeoben > 63):
                         neuesummeoben = 63
 
-                neuerzustand = ((index / 64) + 2**platz) * 64 + neuesummeoben
+                neuerzustand = (int(index / 64) + 2**platz) * 64 + neuesummeoben
                 erwartung = zugewinn + restgewinn[neuerzustand]
 
                 if (erwartung >= maxerwartung):
