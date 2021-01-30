@@ -84,6 +84,7 @@ class Game(xbmcgui.WindowXML):
     diceFinished = 0
 
     delayComputer = 0
+    stop_thread = False
 
     #set values for game play speed
     time = 300
@@ -131,6 +132,7 @@ class Game(xbmcgui.WindowXML):
         # init the grid
 
         # start the timer thread
+        self.stop_thread = False
         threading.Thread(target=self.timer_thread).start()
         # start the game
 
@@ -159,6 +161,7 @@ class Game(xbmcgui.WindowXML):
                                  addon.getLocalizedString(31046)
                                 )
         if confirmed:
+            self.stop_thread = True
             self.close()
 
     def onFocus(self, control_id):
@@ -176,13 +179,6 @@ class Game(xbmcgui.WindowXML):
                     if(points[btn-1] == -1):
 
                         value = yahtzee_points.GetCalc(btn, self.dice)
-
-                        # bonus rule
-                        if(value > 0):
-                            if(yahtzee_points.GetCalc(13, self.dice) == 50):  # check is yahtzee
-                                if(btn == self.dice[0]):                      # correct number for yahtzee
-                                    if(points[12] == 50):                     # check yahtzee already used
-                                        value = value + 50                    # add bonus
 
                         if(value == 0):
                             dialog = xbmcgui.Dialog()
@@ -223,6 +219,7 @@ class Game(xbmcgui.WindowXML):
                     self.player = self.player + 1
                 else:
                     self.player = 1
+                    #self.player = 0  # for test computer vs computer
                 if(self.player + self.computer) > 4:
                    self.computer = 4 - self.player
                 self.updateToggleButtons(0)
@@ -360,7 +357,7 @@ class Game(xbmcgui.WindowXML):
                     self.updateToggleButtons(control_id)
 
     def timer_thread(self):
-        while not xbmc.Monitor().abortRequested():
+        while not xbmc.Monitor().abortRequested() and not self.stop_thread:
             if(self.diceOn):
                 self.delayComputer = 0
                 self.diceCnt = self.diceCnt +1
@@ -368,7 +365,7 @@ class Game(xbmcgui.WindowXML):
                     for w in range(5):
                         if (self.hold[w] == False):
                             try:
-                                x =randint(1, 6)
+                                x = randint(1, 6)
                                 self.dice[w] = x
 
                                 self.wx = self.getControl(5100 + w)
@@ -508,6 +505,8 @@ class Game(xbmcgui.WindowXML):
                                         xbmcgui.Dialog().notification(ADDON_NAME,
                                                                       self.GetPlayerName(self.actualPlayer, True) + '\n' + addon.getLocalizedString(31012 + btn),
                                                                       time= self.time)
+
+                                    # get value
                                     value = yahtzee_points.GetCalc(btn, self.dice)
 
                                     self.SetValuePlayer(self.actualPlayer, btn-1, value)
@@ -548,7 +547,6 @@ class Game(xbmcgui.WindowXML):
                                                                   self.GetPlayerName(self.actualPlayer, True) + '\n' +
                                                                   addon.getLocalizedString(31042) + ': ' + addon.getLocalizedString(31012 + btn),
                                                                   time= self.time)
-
 
                                 # player x set field y
                                 self.SetValuePlayer(self.actualPlayer, btn-1, value)
@@ -608,8 +606,15 @@ class Game(xbmcgui.WindowXML):
             if(points[i] > 0):
                 top = top + points[i]
 
+        # bonus rule top area
         if(top > 62):
             top = top + 35
+
+        # bonus rule additional Yahtzee
+        if(points[12] == 50):                   # do we have already a Yahtzee ?
+            for i in range(6):                  # check 1 to 6
+                if(points[i] == ((i+1) * 5)):   # do we have an additional Yahtzee's
+                    top = top + 50              # add x Yahtzee / 50 points
 
         bottom = 0
         for i in range(7,14):
@@ -766,16 +771,19 @@ class Game(xbmcgui.WindowXML):
                 self.p0x.setLabel(str(self.pointsP1[i]))
             else:
                 self.p0x.setLabel('..')
+
             self.p0x = self.getControl(5500 + i)
             if(self.pointsP2[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP2[i]))
             else:
                 self.p0x.setLabel('..')
+
             self.p0x = self.getControl(5600 + i)
             if(self.pointsP3[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP3[i]))
             else:
                 self.p0x.setLabel('..')
+
             self.p0x = self.getControl(5700 + i)
             if(self.pointsP4[i] >= 0):
                 self.p0x.setLabel(str(self.pointsP4[i]))
