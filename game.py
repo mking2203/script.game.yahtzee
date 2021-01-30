@@ -71,7 +71,7 @@ class Game(xbmcgui.WindowXML):
 
     soundOn = True
 
-    round = 0
+    game_round = 0
     actualTry = 0
     actualPlayer = 0
 
@@ -607,8 +607,10 @@ class Game(xbmcgui.WindowXML):
         for i in range(6):
             if(points[i] > 0):
                 top = top + points[i]
-                if(top > 62):
-                    top = top + 35
+
+        if(top > 62):
+            top = top + 35
+
         bottom = 0
         for i in range(7,14):
             if(points[i] > 0):
@@ -619,7 +621,7 @@ class Game(xbmcgui.WindowXML):
 
     def NewGame(self):
 
-          self.round = 1
+          self.game_round = 1
           # we dont't start yet, so we can change player / computer
           self.gameOn = False
           self.diceOn = False
@@ -656,8 +658,8 @@ class Game(xbmcgui.WindowXML):
 
         if (self.actualPlayer > (self.player + self.computer)):
             self.actualPlayer = 1
-            self.round = self.round + 1
-            if (self.round  == 14):
+            self.game_round = self.game_round + 1
+            if (self.game_round  == 14):
 
                 self.gameOn = False # game over
                 if(self.soundOn):
