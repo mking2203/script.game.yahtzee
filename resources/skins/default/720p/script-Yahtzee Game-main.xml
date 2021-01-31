@@ -134,6 +134,20 @@
 				<aligny>center</aligny>
 				<onright>5200</onright>
 				<onup>5009</onup>
+				<ondown>5011</ondown>
+			</control>
+			<control type="button" id="5011">
+				<top>550</top>
+				<left>120l</left>
+				<width>200</width>
+				<height>70</height>
+				<label>$ADDON[script.game.yahtzee 31053]</label>
+				<texturefocus>button_active.png</texturefocus>
+				<texturenofocus>button.png</texturenofocus>
+				<align>center</align>
+				<aligny>center</aligny>
+				<onright>5200</onright>
+				<onup>5010</onup>
 			</control>
 		</control>
 		<control type="image" id="5100">

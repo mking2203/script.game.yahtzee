@@ -257,3 +257,7 @@ msgstr ""
 msgctxt "#31052"
 msgid "DRAW"
 msgstr ""
+
+msgctxt "#31053"
+msgid "Highscores"
+msgstr ""

@@ -24,6 +24,7 @@ import time
 import threading
 import string
 import sys
+import json
 
 import xbmc
 import xbmcvfs
@@ -46,6 +47,19 @@ LIB_PATH = os.path.join(
     'resources',
     'lib'
 )
+
+# score table
+scores = {"scorePlayer": [220, 215, 210, 205, 200],
+          "namePlayer": ["Logan", "Mark", "Olivia", "Mike", "Ronny"],
+          "scoreCPU": [220, 215, 210, 205, 200]}
+
+# path to profile
+PROFILE_Path = xbmcvfs.translatePath(addon.getAddonInfo('profile'))
+scoreFile = os.path.join(PROFILE_Path, "score.json")
+if not xbmcvfs.exists(scoreFile):
+    # init scores
+    with open(scoreFile, "w") as write_file:
+        json.dump(scores, write_file)
 
 SPEED = addon.getSetting('speed')
 NOTIFY = addon.getSetting('notify') == "true"
@@ -78,6 +92,7 @@ class Game(xbmcgui.WindowXML):
     player = 1
     computer = 1
     gameOn = False
+    showHigh = False
 
     diceOn = False
     diceCnt = 0
@@ -355,6 +370,10 @@ class Game(xbmcgui.WindowXML):
                 if(control_id == 5204):
                     self.hold[4] = not self.hold[4]
                     self.updateToggleButtons(control_id)
+
+        # highscores
+        if(control_id == 5011):
+            self.showHighscores()
 
     def timer_thread(self):
         while not xbmc.Monitor().abortRequested() and not self.stop_thread:
@@ -664,9 +683,12 @@ class Game(xbmcgui.WindowXML):
         if (self.actualPlayer > (self.player + self.computer)):
             self.actualPlayer = 1
             self.game_round = self.game_round + 1
+
             if (self.game_round  == 14):
 
                 self.gameOn = False # game over
+                showHigh = False
+
                 if(self.soundOn):
                     xbmc.playSFX(MEDIA_PATH + '\\applaus.wav')
 
@@ -698,6 +720,59 @@ class Game(xbmcgui.WindowXML):
                                       addon.getLocalizedString(31027) + ": " + str(maxPoints))
 
 
+                # for all players
+                for n in range(1,5):
+
+                    points = self.GetValuePlayer(n)
+                    # total points player n
+                    x = points[14]
+
+                    if(n <= self.player):
+
+                        # loop through player highscores
+                        for y in range(5):
+                            s = scores["scorePlayer"][y]
+                            if(x > s):
+                                showHigh = True
+
+                                dialog.ok(ADDON_NAME,
+                                          "Neuer Highscore" + '\n' +
+                                          "Spieler " + self.GetPlayerName(n, False) + '\n' +
+                                          "Platz " + str(y+1) + " mit " + str(x))
+
+                                for z in range(3, y-1 ,-1):
+                                    scores["scorePlayer"][z+1] = scores["scorePlayer"][z]
+                                    scores["namePlayer"][z+1] = scores["namePlayer"][z]
+
+                                scores["scorePlayer"][y] = x
+                                scores["namePlayer"][y] = self.GetPlayerName(n, False)
+
+                                break
+                    else:
+                        # loop through cpu highscores
+                        for y in range(5):
+                            s = scores["scoreCPU"][y]
+                            if(x > s):
+                                showHigh = True
+
+                                dialog.ok(ADDON_NAME,
+                                          "Neuer Highscore CPU" + '\n' +
+                                          "Platz " + str(y+1) + " mit " + str(x))
+
+                                for z in range(3, y-1 ,-1):
+                                    scores["scoreCPU"][z+1] = scores["scoreCPU"][z]
+
+                                scores["scoreCPU"][y] = x
+
+                                break
+
+                # save scores
+                with open(scoreFile, "w") as write_file:
+                    json.dump(scores, write_file)
+
+                if(showHigh):
+                    self.showHighscores()
+
         self.updateToggleButtons(0);
 
         # focus the dice button
@@ -711,7 +786,20 @@ class Game(xbmcgui.WindowXML):
             if(NOTIFY):
                 xbmcgui.Dialog().notification(ADDON_NAME,
                                               self.GetPlayerName(self.actualPlayer, False),
-                                              time= self.time)
+                                          time= self.time)
+
+    def showHighscores(self):
+
+        # show highscores
+        msg = '[B]Player highscores[/B]\n'
+        for t in range(5):
+            msg = msg + str(t + 1) + ". " +  str(scores["scorePlayer"][t]) + " - " + str(scores["namePlayer"][t]) + "\n"
+
+        msg = msg + '[B]Top computer scores[/B]\n'
+        for t in range(5):
+            msg = msg + str(t + 1) + ". " +  str(scores["scoreCPU"][t]) + "\n"
+
+        xbmcgui.Dialog().ok(ADDON_NAME, msg)
 
     def updateToggleButtons(self, control_id):
 

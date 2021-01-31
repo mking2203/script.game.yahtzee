@@ -257,3 +257,7 @@ msgstr "Gewinner"
 msgctxt "#31052"
 msgid "DRAW"
 msgstr "Unentschieden"
+
+msgctxt "#31053"
+msgid "Highscores"
+msgstr "Beste Kniffel"
